@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@nestjs/mapped-types": "^1.1.0",
+    "@nestjs/websockets": "^9.0.2",
+    "g": "^2.0.1",
+    "socket.io": "^4.5.1"
+  }
+}

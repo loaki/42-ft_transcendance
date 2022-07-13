@@ -1,0 +1,174 @@
+/*
+
+** DOCKER COMPOSE
+*/
+
+//	Introduction
+Docker Compose permet de gerer les conteneurs Docker et simplifier les deploiements. Il utilise des fichiers yaml qui peuvent eux-meme utiliser des fichiers Dockerfile
+
+// Commandes
+	Demarrer une stack : docker-compose up (avec l'option --build: construit les images avant de lancer les conteneurs.)
+	Arreter : docker-compose stop ou ctrl+c
+	Arreter la stack  et supprimer la stack : docker-compose down 
+	Afficher les images disponibles en local: docker image ls
+	Afficher l'etats des conteneurs : docker-compose ps
+	Afficher les 5premiers logs (utilie si detach): docker-compose logs -f --tail 5
+	Verifier le fichier yaml : docker-compose config ( si good affiche le fichier sinon affiche l'erreur)
+
+	Afficher tous les conteneurs: docker ps -a 
+	Supprimer le conteneur arrete: docker rm (nom ou id)
+
+	exemples: 
+		term 1 : 	docker-compose up -d
+		term 2 :	docker-compose logs -f --tail 5
+
+// Fichier yaml
+
+version: "3"					#	indique la version a utiliser
+services:						#	obligatoire, les conteneurs doivent etre dessous
+  web:							#	1er conteneur, il se nomme web
+    build: .					#	Se construit avec un Dockerfile qui se situe a la racine
+    ports:						#	Expose le port pour le rendre accessible
+      - "8000:5000"
+	restart: always				#	Si ca plante, ca se relance, utilise pour les BD
+    volumes:					#	voir -*-
+      - .:/code					#	stock les donnees ici
+    environment:				#	Definit des variables env, chaque image a  ses propores var env
+      FLASK_ENV: development
+  redis:
+    image: "redis:alpine"		#	Va chercher l'image qui correspond
+	depends_on:					#	Cree une dependance, va d abord demarrer web puis redis
+		- web
+  db:
+	container_name: database	#	Setup un nom pour le container
+
+
+
+-*-	
+	Stateless vs Stateful
+		une base de donnees est stateful, ca veut dire qu on garde l etat de la BD
+		le protocol HTTP lui est stateless.
+	
+	Le conteneur doit etre IMMUABLE ( ne pas changer), donc ne doit pas stocker de donnees
+	Pour le faire en local avec une BD, il faut creer un volume
+
+
+
+
+ip a		== pour recuperer 10.0.2.15 pour la database dans pgadmin
+
+		2: enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+		link/ether 08:00:27:40:2b:9a brd ff:ff:ff:ff:ff:ff
+		inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
+		valid_lft 81034sec preferred_lft 81034sec
+		inet6 fe80::7b59:35f9:d19b:fc20/64 scope link noprefixroute 
+		valid_lft forever preferred_lft forever
+
+
+
+
+docker ps
+
+docker inspect d1969accd75a | grep IPAddress
+
+	"SecondaryIPAddresses": null,
+	"IPAddress": "",
+			"IPAddress": "172.19.0.2",			== le host
+
+
+
+
+/*
+** POSTGRESQL
+*/
+ Systeme de gestion de base de donnees qui utilise le langage SQL (comme MYSQL)
+Postgresql commence a etre de plus en plus utilise (MYSQL toujours premier).
+Mysql est plus flexible mais un peu moins pro.
+
+//	pgadmin
+	Est un outil graphique pour display du postgresql
+
+// Environment variable
+	POSTGRES_PASSWORD		= obligatoire, les autres optionnelles, ne doit pas etre vide ou indefini
+	POSTGRES_USER			= a utiliser avec le password
+	POSTGRES_DB				= donne un nom a la db
+
+	https://www.pgadmin.org/docs/pgadmin4/development/container_deployment.html
+	https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html#environment-variables
+
+
+		// connecter pgadmin et postgresq
+		https://linuxhint.com/postgresql_docker/
+
+
+
+
+/*
+**	NestJS
+*/
+
+//	Commandes
+npx @nestjs/cli new test-projet1
+
+	==> dans nodejsapp/test-projet1
+npm run start
+
+// Documentation
+
+	==> Installation plus NestJS backend + database (MongoDB)
+https://blog.logrocket.com/full-stack-app-tutorial-nestjs-react/
+
+	==> Tuto NodesJS Openclassrooms
+https://openclassrooms.com/fr/courses/6390246-passez-au-full-stack-avec-node-js-express-et-mongodb/6466473-preparez-la-base-de-donnees-pour-les-informations-dauthentification
+
+
+	==> Big tuto NestJS, everything inside
+https://wanago.io/2020/05/25/api-nestjs-authenticating-users-bcrypt-passport-jwt-cookies/
+
+
+// Generer des modules ou autres...
+	# modules:
+		nest generate module database
+	# controller:
+		nest generate controller database
+	# decorator:
+		nest generate decorator database
+
+
+
+
+/*
+**	AUTRE
+*/
+
+Si on ne peut pas bind car deja en ecoute
+sudo lsof -i :5432
+	pour afficher qui ecoute sur 5432
+sudo -pkill -u postgresq
+	pour arreter ce qui utilise 5432
+
+
+
+
+
+
+	// gros tuto
+	https://tushar-chy.medium.com/a-simple-todo-application-with-nestjs-typeorm-postgresql-swagger-pgadmin4-jwt-and-docker-caa2742a4295
+
+	// ruby + postgres + docker-compsoe
+	https://docs.docker.com/samples/rails/
+
+	// api 42
+	https://api.intra.42.fr/apidoc/guides/getting_started
+	https://api.intra.42.fr/apidoc/guides/web_application_flow#42-redirects-back-to-your-site
+	https://profile.intra.42.fr/oauth/applications
+	https://profile.intra.42.fr/oauth/applications/new
+
+
+
+	https://wanago.io/2020/05/18/api-nestjs-postgresql-typeorm/
+	https://wanago.io/2020/05/18/api-nestjs-postgresql-typeorm/
+
+
+	nestjs controller providers etc
+	https://blog.devgenius.io/setting-up-nestjs-with-postgresql-ac2cce9045fe

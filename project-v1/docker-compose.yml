@@ -1,0 +1,61 @@
+version: "3"
+services:
+  db:
+    container_name: postgres_container
+    image: postgres:latest
+    env_file:
+      - postgres.env
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+
+  nestjs:
+    container_name: nestjs_container
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+      - /app/node_modules/
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_db:/var/lib/pgadmin
+    env_file:
+      - pgadmin.env
+    depends_on:
+      - db
+
+
+# test
+  # frontend:
+  #   container_name: reactjs_container
+  #   build:
+  #     context: ./frond-end
+  #     dockerfile: ./Dockerfile
+  #   # ports:
+  #   #   - '4000:3000'
+  #   volumes:
+  #     - ./frond-end:/app
+  #     - /app/node_modules/
+  #   depends_on:
+  #     - nestjs
+
+
+
+
+volumes:
+  postgres_db:
+  pgadmin_db:
+

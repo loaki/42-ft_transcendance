@@ -1,0 +1,138 @@
+docker-compose up --build
+
+second terminal
+npm run start:dev
+
+
+
+
+file .env 
+# JWT_SECRET=anyKey         useless?
+
+
+
+
+
+
+11/06
+    TO do, passer par prisma pour creer la base de donnees et les tables
+    https://docs.nestjs.com/recipes/prisma#set-the-database-connection
+
+    
+
+ 17/06
+TUTO
+    https://betterprogramming.pub/nest-js-project-with-typeorm-and-postgres-ce6b5afac3be
+
+    other
+    https://blog.devgenius.io/setting-up-nestjs-with-postgresql-ac2cce9045fe
+
+    nestjs
+    https://docs.nestjs.com/controllers
+    https://docs.nestjs.com/techniques/validation
+    https://docs.nestjs.com/pipes
+    https://github.com/typestack/class-validator#validation-decorators
+
+
+
+    21/06
+    https://docs.nestjs.com/techniques/file-upload#file-upload
+    https://github.com/nestjs/nest/tree/master/sample/29-file-upload
+    https://github.com/expressjs/multer
+    https://stackoverflow.com/questions/49096068/upload-file-using-nestjs-and-multer
+    http://v4.tsed.io/tutorials/multer.html#configure-the-file-upload-directory
+
+
+COMMANDES CURL
+
+==> add user 
+maintenant:
+curl -X POST http://localhost:3000/user -H "Content-Type: application/json" -d '{"firstName": "Pierre", "lastName": "Saumet", "password": "password"}'
+
+avant:
+curl -X POST http://localhost:3000/user -H "Content-Type: application/json" -d '{"firstName": "Pierre", "lastName": "Saumet", "biography": "Test upload user"}'
+
+==> delete user, need uuid to be used
+curl -X DELETE http://localhost:3000/user/17b6dc68-2020-475e-b2c8-28cd92f5f9ee
+
+==> get data for a user, need uuid to be used
+curl -X GET http://localhost:3000/user/64d8cdc8-d8ae-4df4-a18e-4b3da93ff2c1
+
+
+
+==> add avatar == works => need adding uuid
+curl http://localhost:3000/user/upload -F  'file=@./apple_logo.png' -F 'name=test'
+
+
+    "@sideway/formula": "^3.0.0",
+    "@sideway/pinpoint": "^2.0.0",
+    "@types/bcrypt": "^5.0.0",
+
+
+    pour demain terminer authentifiation avec inscription
+    + ming
+
+
+
+    avec aauthentification pour creer data
+    curl -X POST http://localhost:3000/authentification/register -d '{"firstName": "Pierre_test", "lastName": "TRUC", "password": "password"}' -H "Content-Type: application/json"
+
+    curl http://localhost:3000/profile -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+
+
+
+    curl http://localhost:3000/user/search/Pierre_test -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0YmJkMmNiMy0xNzhkLTRjZjgtOTcyZC02NDUzMDM5NThlMDUiLCJpYXQiOjE2NTY1MTAwODEsImV4cCI6MTY1NjUxMzY4MX0.pDQae-r1y-FnCnWf-yuUq5URby4NLEBkokMTdjXcpbQ"
+
+
+
+
+
+    curl -X -v POST http://localhost:3000/authentification/register -d '{"firstName": "TEst_connection", "lastName": "test", "password": "password"}' -H "Content-Type: application/json"
+
+
+
+    e3r2p8% curl -X POST -v  http://localhost:3000/authentification/register -d '{"firstName": "TEst_connection", "lastName": "test", "password": "password"}' -H "Content-Type: application/json"
+Note: Unnecessary use of -X or --request, POST is already inferred.
+*   Trying 127.0.0.1:3000...
+* TCP_NODELAY set
+* Connected to localhost (127.0.0.1) port 3000 (#0)
+> POST /authentification/register HTTP/1.1
+> Host: localhost:3000
+> User-Agent: curl/7.68.0
+> Accept: */*
+> Content-Type: application/json
+> Content-Length: 76
+> 
+* upload completely sent off: 76 out of 76 bytes
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 201 Created
+< X-Powered-By: Express
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 277
+< ETag: W/"115-goU97O5LfrDzs6ffCspP1FRYjsw"
+< Date: Wed, 29 Jun 2022 13:27:51 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+< 
+* Connection #0 to host localhost left intact
+{"firstName":"TEst_connection","lastName":"test","biography":null,"pseudo":null,"avatarId":null,"email":null,"isConnected":false,"id":"cd03855f-8eb9-44b6-8c56-d5ef08351586","created":"2022-06-29T13:27:51.283Z","victory":0,"defeat":0,"score":0,"friends_list":[],"role":"member"}%  
+
+
+
+
+curl -X POST -v  http://localhost:3000/authentification/log-in -d '{"firstName": "TEst_connection", "lastName": "test", "password": "password"}' -H "Content-Type: application/json"
+
+
+cookie = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjZDAzODU1Zi04ZWI5LTQ0YjYtOGM1Ni1kNWVmMDgzNTE1ODYiLCJpYXQiOjE2NTY1MDk1MDEsImV4cCI6MTY1NjUxMzEwMX0.hKY5P7zo5JKs23RjSdol2CCDG4eO3mYUz4cTDAybs3A
+
+
+
+
+// connection
+curl -v http://localhost:3000/authentification/log-in -d '{"firstName": "Pierre_test", "lastName": "test", "password": "password"}' -H "Content-Type: application/json"
+
+
+https://arctype.com/blog/nestjs-mvc/#set-up-a-yugabytedb-database
+
+
+curl -v http://localhost:3000/user/search/Pierre_test -H 'Cookie: Authentication=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0YmJkMmNiMy0xNzhkLTRjZjgtOTcyZC02NDUzMDM5NThlMDUiLCJpYXQiOjE2NTY1MTA1MjUsImV4cCI6MTY1NjUxNDEyNX0.jF20rBy1J7_ysJL8Y60487CExLcTIi2igGwcohf5Mq8'

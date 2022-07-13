@@ -1,0 +1,73 @@
+/*css for home */
+
+.box {
+  height: 80px;
+  width: 300px;
+  font-family: cursive;
+  font-weight: bold;
+  font-size: x-large;
+  background-color: rgb(233, 240, 235);
+}
+
+.div {
+  position: absolute;
+  top: 70%;
+  left: 42%;
+  margin: 0 auto;
+}
+
+.nav {
+  position: absolute;
+  left: 20%;
+  color: rgb(65, 63, 61);
+  /* margin: 5 auto; */
+}
+.log-out {
+  position: relative;
+  left: 600px;
+}
+
+.gif {
+  height: 550px;
+  width: 650px;
+  position: relative;
+  left: 30%;
+  transform: translateX(50%);
+  /* bottom: 70%; */
+  transform: translateY(10%);
+}
+
+.logo {
+  height: 50px;
+  width: 100px;
+}
+
+/*css for signup*/
+.signup {
+  height: 40px;
+  width: 100%;
+}
+
+.profil {
+  transform: translateX(50%);
+  transform: translateY(300);
+  height: 450px;
+  width: 50%;
+}
+
+.image {
+    position:fixed;
+    top: 0;
+    left: 0;
+    width:100%;
+    height:100%;
+    min-width: 1000px;
+    z-index:-10;
+    zoom: 1;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-position: center 0;
+}

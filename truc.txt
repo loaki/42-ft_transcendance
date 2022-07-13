@@ -1,0 +1,66 @@
+<form action="" id="form">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+            <input     type="text"     class="form-control"    id="title"     name="title"     value="<%= book.title %>"     />
+    </div>
+    
+    <div class="mb-3">
+        <label for="author" class="form-label">Author</label>
+            <input     type="text"     class="form-control"     id="author"     name="author"     value="<%= book.author %>"     />
+    </div>
+    
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity</label>
+            <input     type="text"      class="form-control"    id="quantity"    name="quantity"    value="<%= book.quantity %>"    />
+    </div>
+
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+            <textarea       class="form-control"    id="description"    name="description"    rows="3"    >
+            </textarea>
+    </div>
+    
+    <input type="hidden" class="" name="id" value="<%= book.id %>" />
+    
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+
+
+function updateBook() {
+ const createForm = document.getElementById('form');
+ createForm.addEventListener('submit', async (e) => {
+   e.preventDefault();
+   const id = createForm['id'].value;
+   await fetch(`http://localhost:3000/book/${id}`, {
+     method: 'Put',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({
+       title: createForm['title'].value,
+       author: createForm['author'].value,
+       quantity: createForm['quantity'].value,
+       description: createForm['description'].value,
+     }),
+   })
+     .then((data) => data.json())
+     .then((res) => {
+       if (res) {
+         document.querySelector('.alert').removeAttribute('hidden');
+         setTimeout(() => {
+           window.location.reload();
+         }, 3000);
+       }
+     });
+ });
+}
+
+async function deleteBook(id) {
+ console.log(id);
+ await fetch(`http://localhost:3000/book/${id}`, {
+   method: 'DELETE',
+ }).then(() => (window.location.href = '/book'));
+}
+
+updateBook();
