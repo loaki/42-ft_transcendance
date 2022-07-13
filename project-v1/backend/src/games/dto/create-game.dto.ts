@@ -8,11 +8,11 @@ export class CreateGameDto {
 
     @IsOptional()
     @IsInt()
-    readonly winnerId: number;
+    readonly winnerId: string;
     
     @IsOptional()
     @IsInt()
-    readonly loserId: number;
+    readonly loserId: string;
     
     @IsOptional()
     @IsInt()

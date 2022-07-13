@@ -1,7 +1,7 @@
 import { GameMode, UserStatus } from "./Constants";
 
 export class User {
-	id: number;
+	id: string;
 	username: string;
 	ratio?: number;
 	status?: UserStatus;
@@ -10,7 +10,7 @@ export class User {
 
 	mode?: GameMode;
 
-	constructor(id: number, username: string, socketId?: string, ratio?: number) {
+	constructor(id: string, username: string, socketId?: string, ratio?: number) {
 		this.id = id;
 		this.username = username;
 		this.ratio = ratio;
@@ -32,7 +32,7 @@ export class User {
 	setRoomId(roomId: string | undefined) {
 		this.roomId = roomId;
 	}
-
+ss
 	setMode(mode: string) {
 		if (mode === "timer")
 			this.mode = GameMode.TIMER;
@@ -64,7 +64,7 @@ export class ConnectedUsers {
 		return this.users[userIndex];
 	}
 
-	getUserById(id: number): User | undefined {
+	getUserById(id: string): User | undefined {
 		let userIndex: number = this.users.findIndex(user => user.id === id);
 		if (userIndex === -1)
 			return undefined;

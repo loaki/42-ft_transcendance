@@ -30,7 +30,7 @@ export type SerializeRoom = {
 
 	playerOne: {
 		user: {
-			id: number;
+			id: string;
 			username: string;
 		}
 		width: number;
@@ -43,7 +43,7 @@ export type SerializeRoom = {
 
 	playerTwo: {
 		user: {
-			id: number;
+			id: string;
 			username: string;
 		}
 		width: number;

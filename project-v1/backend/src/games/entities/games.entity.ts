@@ -21,10 +21,10 @@ export class Game {
     // players: User[];
 
     @Column({ nullable: true })
-    winnerId: number;
+    winnerId: string;
 
     @Column({ nullable: true })
-    loserId: number;
+    loserId: string;
 
     @Column({ nullable: true })
     winnerScore: number;

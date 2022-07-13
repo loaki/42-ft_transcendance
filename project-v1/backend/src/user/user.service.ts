@@ -114,4 +114,12 @@ export class UserService {
   }
 
 
+  // update
+
+
+  async updateStats(user: User, isDraw: boolean, isWinner: boolean) {
+    return user;
+  }
+
+
 }
