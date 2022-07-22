@@ -30,4 +30,14 @@ export class GameGateway implements OnGatewayInit {
     client.emit('leftRoom', room);
   }
 
+  @SubscribeMessage('moveToServer')
+  async handleMove(client: Socket, message: { sender: string, message: string }) {
+    const allsock = await this.wss.allSockets();
+    console.log(allsock.keys().next());
+    if (allsock.keys().next().value == client.id) {
+      this.wss.emit('movePlayer', message, 0);
+    } else {
+      this.wss.emit('movePlayer', message, 1);
+    }
+  }
 }

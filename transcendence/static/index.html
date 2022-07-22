@@ -40,8 +40,56 @@
             </p>
             <!-- /Tabs -->
         </section>
+        <section class="canvas">
+            <canvas class="canvas-pong" id="pong" width="600" height="600"></canvas>
+        </section>
     </main>
     <script>
+        var score = [1];
+        var player_y = [1];
+        var player_d = 20;
+        var player_s = 50;
+        var ball = [1];
+        var ball_d = [1];
+        var ball_r = 10;
+
+        function draw_ball() {
+            var canvas = document.getElementById('pong');
+            if (canvas.getContext) {
+                var ctx = canvas.getContext('2d');
+                ctx.beginPath();
+                ctx.arc(ball[0], ball[1], ball_r, 0, Math.PI*2);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function draw() {
+            var canvas = document.getElementById('pong');
+            if (canvas.getContext) {
+                var ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgb(200, 0, 0)';
+                ctx.fillRect(0, player_y[0], 10, player_s);
+                ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
+                ctx.fillRect(canvas.width - 10 , this.player_y[1], 10, player_s);
+                // ctx.arc(ball[0], ball[1], 10, 0, Math.PI*2);
+                // ctx.fillStyle = 'rgba(0, 200, 0, 0.5)';
+                // ctx.fill();
+                draw_ball();
+                if (ball[0] + ball_d[0] > canvas.width - ball_r || ball[0] + ball_d[0] < ball_r) {
+                    ball_d[0] *= -1;
+                }
+                if (ball[1] + ball_d[1] > canvas.height - ball_r || ball[1] + ball_d[1] < ball_r) {
+                    ball_d[1] *= -1;
+                }
+                ball[0] += ball_d[0];
+                ball[1] += ball_d[1];
+            }
+        }
+        setInterval(draw, 5);
+
         Vue.component('alerts-component', VueSimpleNotify.VueSimpleNotify);
         var app = new Vue({
             el: '#v-app',
@@ -53,16 +101,22 @@
                     typescript: [],
                     nestjs: []
                 },
-                socket: { game: null, alerts: null },
+                socket: { game: null, alerts: null},
                 alerts: [],
                 activeRoom: 'general',
                 rooms: {
                     general: false,
                     typescript: false,
                     nestjs: false
-                }
+                },
+                ball_d: 2,
+                score: [1],
+                player_y: [1],
+                ball: [1]
             },
+
             methods: {
+
                 sendGameMessage() {
                     if (this.isMemberOfActiveRoom) {
                         this.socket.game.emit('gameToServer', { sender: this.username, room: this.activeRoom, message: this.text });
@@ -71,19 +125,27 @@
                         alert('You must join the room before sending messages!');
                     }
                 },
+
                 receiveGameMessage(msg) {
                     this.messages[msg.room].push(msg);
                 },
+
                 receiveAlertMessage(msg) {
                     this.alerts.push(msg);
                 },
+
                 toggleRoomMembership() {
                     if (this.isMemberOfActiveRoom) {
                         this.socket.game.emit('leaveRoom', this.activeRoom);
                     } else {
                         this.socket.game.emit('joinRoom', this.activeRoom);
                     }
+                },
+                
+                handleMove(e) {
+                    this.socket.game.emit('moveToServer', { sender: this.username, message: e.key });
                 }
+
             },
             computed: {
                 isMemberOfActiveRoom() {
@@ -91,6 +153,7 @@
                 }
             },
             created() {
+                
                 this.username = prompt('Enter your username:');
 
                 this.socket.game = io('http://localhost:3000/game');
@@ -99,6 +162,16 @@
                 });
                 this.socket.game.on('connect', () => {
                     this.toggleRoomMembership();
+                    var canvas = document.getElementById('pong');
+                    player_y[0] = canvas.height / 2;
+                    player_y[1] = canvas.height / 2;
+                    score[0] = 0;
+                    score[1] = 0;
+                    ball[0] = canvas.width / 2;
+                    ball[1] = canvas.height / 2;
+                    ball_d[0] = 2;
+                    ball_d[1] = 2;
+
                 });
                 this.socket.game.on('joinedRoom', (room) => {
                     this.rooms[room] = true;
@@ -106,11 +179,24 @@
                 this.socket.game.on('leftRoom', (room) => {
                     this.rooms[room] = false;
                 });
-
                 this.socket.alerts = io('http://localhost:3000/alert');
                 this.socket.alerts.on('alertToClient', (msg) => {
                     this.receiveAlertMessage(msg);
                 });
+                this.socket.game.on('movePlayer', (e, player) => {
+                    var canvas = document.getElementById('pong');
+                    if (e.message == "ArrowUp" && player_y[player] >= player_d)
+                        player_y[player] -= player_d;
+                    if (e.message == "ArrowDown" && player_y[player] + player_s <= canvas.height - player_d)
+                        player_y[player] += player_d;
+                    draw();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+                        this.handleMove(e);
+                    }
+                });
+
             }
         });
     

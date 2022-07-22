@@ -20,3 +20,7 @@ section.alerts {
     background: blue;
     color: white;
 }
+
+.canvas-pong {
+    border: 1px solid black;
+}
