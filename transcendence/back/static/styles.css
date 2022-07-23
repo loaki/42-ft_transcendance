@@ -8,10 +8,6 @@ section.game {
     grid-area: game;
 }
 
-section.alerts {
-    grid-area: alerts;
-}
-
 .tab-row {
     padding-top: 20px;
 }
