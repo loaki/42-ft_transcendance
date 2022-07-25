@@ -57,7 +57,7 @@ export class GameGateway implements OnGatewayInit {
     score_p2 : number,
     pad1_y : number,
     pad2_y : number,
-    pad_s: number,
+    pad_h: number,
     pad_d: number,
     ball_x : number,
     ball_y : number,
