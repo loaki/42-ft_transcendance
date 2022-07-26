@@ -6,16 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Websockets Client</title>
     <link href="/styles.css" rel="stylesheet">
-    <link href="https://unpkg.com/vue-simple-notify/dist/vue-simple-notify.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-simple-notify/dist/vue-simple-notify.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <main id="v-app">
         <section class="canvas">
             <h1>Pong !</h1>
-            <p>Score : {{game.score_p1}} - {{game.score_p2}}</p>
+            <p>
+                Score : {{game.score_p1}} - {{game.score_p2}}
+            </p>
             <canvas class="canvas-pong" id="pong" width="600" height="600"></canvas>
         </section>
     </main>
@@ -45,12 +45,21 @@
                         app.game.ball_dx = 2;
                         app.game.ball_dy = 0;
                     }
-                    if (((app.game.ball_x + app.game.ball_dx >= canvas.width - app.game.ball_r - app.game.pad_w) && (app.game.ball_y + app.game.ball_r >= app.game.pad2_y && app.game.ball_y - app.game.ball_r <= app.game.pad2_y + app.game.pad_h)) || ((app.game.ball_x + app.game.ball_dx - app.game.pad_w <= app.game.ball_r )) && (app.game.ball_y + app.game.ball_r >= app.game.pad1_y && app.game.ball_y - app.game.ball_r <= app.game.pad1_y + app.game.pad_h)) {
+                    if ((app.game.ball_x + app.game.ball_dx - app.game.pad_w <= app.game.ball_r ) && (app.game.ball_y + app.game.ball_r >= app.game.pad1_y && app.game.ball_y - app.game.ball_r <= app.game.pad1_y + app.game.pad_h)) {
+                        if (app.game.ball_y - app.game.ball_r > app.game.pad1_y + 2 * app.game.pad_h / 3) {
+                            app.game.ball_dy -= app.game.ball_dy > 0 ? 1 : -1;
+                        } else if (app.game.ball_y + app.game.ball_r < app.game.pad1_y + app.game.pad_h / 3){
+                            app.game.ball_dy += app.game.ball_dy > 0 ? 1 : -1;
+                        } else if (app.game.ball_dx <= 3 && app.game.ball_dx >= -3) {
+                            app.game.ball_dx += app.game.ball_dx > 0 ? 1 : -1;
+                        }
+                        app.game.ball_dx *= -1;
+                    } else if ((app.game.ball_x + app.game.ball_dx >= canvas.width - app.game.ball_r - app.game.pad_w) && (app.game.ball_y + app.game.ball_r >= app.game.pad2_y && app.game.ball_y - app.game.ball_r <= app.game.pad2_y + app.game.pad_h)) {
                         if (app.game.ball_y - app.game.ball_r > app.game.pad2_y + 2 * app.game.pad_h / 3) {
                             app.game.ball_dy -= app.game.ball_dy > 0 ? 1 : -1;
                         } else if (app.game.ball_y + app.game.ball_r < app.game.pad2_y + app.game.pad_h / 3){
                             app.game.ball_dy += app.game.ball_dy > 0 ? 1 : -1;
-                        } else if (app.game.ball_dx < 3 && app.game.ball_dx > 3) {
+                        } else if (app.game.ball_dx <= 3 && app.game.ball_dx >= -3) {
                             app.game.ball_dx += app.game.ball_dx > 0 ? 1 : -1;
                         }
                         app.game.ball_dx *= -1;
@@ -85,7 +94,6 @@
         }
         setInterval(draw, 10);
 
-        Vue.component('alerts-component', VueSimpleNotify.VueSimpleNotify);
         var app = new Vue({
             el: '#v-app',
             data: {
@@ -115,8 +123,6 @@
 
             },
             created() {
-                
-                this.username = prompt('Enter your username:');
 
                 this.socket.game = io('http://localhost:3000/game');
 
@@ -180,9 +186,7 @@
                         draw();
                     }
                 });
-                // this.socket.game.on('drawBall', () => {
-                //     drawBall();
-                // });
+
                 document.addEventListener('keydown', (e) => {
                     if (e.key == "ArrowUp" || e.key == "ArrowDown") {
                         this.handleMove(e);

@@ -29,18 +29,6 @@ export class GameGateway implements OnGatewayInit {
     this.wss.to(message.room).emit('gameToClient', message);
   }
 
-  @SubscribeMessage('joinRoom')
-  handleJoinRoom(client: Socket, room: string) {
-    client.join(room);
-    client.emit('joinedRoom', room);
-  }
-
-  @SubscribeMessage('leaveRoom')
-  handleLeaveRoom(client: Socket, room: string) {
-    client.leave(room);
-    client.emit('leftRoom', room);
-  }
-
   @SubscribeMessage('moveToServer')
   handleMove(client: Socket, message: { sender: string, message: string }) {
     if (this.player1_id == client.id) {
