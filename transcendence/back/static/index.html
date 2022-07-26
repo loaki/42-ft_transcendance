@@ -14,7 +14,7 @@
         <section class="canvas">
             <h1>Pong !</h1>
             <p>
-                Score : {{game.score_p1}} - {{game.score_p2}}
+                {{ game.start == 1 ? 'Score : ' + game.score_p1 + ' - ' + game.score_p2 : 'Waiting for opponent...'}}
             </p>
             <canvas class="canvas-pong" id="pong" width="600" height="600"></canvas>
         </section>

@@ -61,12 +61,6 @@ export class GameGateway implements OnGatewayInit {
       this.ball_y = data.ball_y;
       this.ball_dx = data.ball_dx;
       this.ball_dy = data.ball_dy;
-      console.log(this.pad1_y, 
-        this.pad2_y, 
-        this.ball_x, 
-        this.ball_y, 
-        this.ball_dx, 
-        this.ball_dy );
     }
   }
 
